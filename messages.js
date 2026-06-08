@@ -66,6 +66,8 @@ function submitGatsbyPrompt() {
         document.getElementById("gatsbyPrompt").value = "";
         displayMessages();
 
+        document.getElementById("loadingScreen").classList.remove("hidden");
+
         // save tom response to message history
         messageHistory.push({
             "role": "assistant",
@@ -87,13 +89,12 @@ function submitGatsbyPrompt() {
         });
         displayMessages();
 
-        document.getElementById("loadingScreen").classList.add("hidden");
-
         if (endOfGame) {
             fail();
             return;
         }
 
+        document.getElementById("loadingScreen").classList.add("hidden");
         document.getElementById("userInput").style.display = "block";
     })()
 }

@@ -1,10 +1,5 @@
 const key = prompt("Enter API key: ");
-let messageHistory = [
-    /*{
-      "role": "assistant",
-      "content": "Tom: Daisy loves me over you. You are just a booklegger that showed up one day. Think about all the times that I was amazing to you, Daisy!"
-    }*/
-];
+let messageHistory = [];
 
 function displayMessages() {
     let messages = "";
@@ -79,14 +74,39 @@ function submitGatsbyPrompt() {
         displayMessages();
 
         // save daisy response to message history
+        let daisyResponse = await getAIResponse(daisyPrompt);
+        let endOfGame = false;
+        if (daisyResponse.includes("{marker: end}")) {
+            daisyResponse = daisyResponse.replace("{marker: end}", "");
+            endOfGame = true;
+        }
+
         messageHistory.push({
             "role": "assistant",
-            "content": await getAIResponse(daisyPrompt)
+            "content": daisyResponse
         });
         displayMessages();
 
         document.getElementById("loadingScreen").classList.add("hidden");
 
+        if (endOfGame) {
+            fail();
+            return;
+        }
+
         document.getElementById("userInput").style.display = "block";
     })()
+}
+
+async function fail() {
+    const dynamicEnding = await getAIResponse(endPrompt);
+
+    const finalGameOverMessage =
+        `<h3>&#128721; GAME OVER: THE ILLUSION SHATTERS</h3>
+        <p><em>${dynamicEnding}</em></p>
+        <p>You drive home to West Egg in defeat, the green light on the dock flickering dimly in the distance, stripped of its colossal significance.</p>
+        <p>You chose to fight against time and class, but the system was rigged from the start. You have learned the hard way what Nick Carraway ultimately realized about the elite:</p>
+        <blockquote>"They were careless people, Tom and Daisy-they smashed up things and creatures and then retreated back into their money or their vast carelessness..."</blockquote>`;
+
+    document.getElementById("messages").innerHTML += finalGameOverMessage;
 }

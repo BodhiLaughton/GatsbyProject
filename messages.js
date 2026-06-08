@@ -89,12 +89,12 @@ function submitGatsbyPrompt() {
         });
         displayMessages();
 
+        document.getElementById("loadingScreen").classList.add("hidden");
         if (endOfGame) {
             fail();
             return;
         }
-
-        document.getElementById("loadingScreen").classList.add("hidden");
+        
         document.getElementById("userInput").style.display = "block";
     })()
 }
